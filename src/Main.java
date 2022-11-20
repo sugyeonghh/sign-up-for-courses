@@ -1,5 +1,12 @@
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        AppConfigurer appConfigure = new AppConfigurer();
+
+        SignUpApp signUpApp = new SignUpApp(
+                appConfigure.courseRepository,
+                appConfigure.menu
+        );
+
+        signUpApp.start();
     }
 }
