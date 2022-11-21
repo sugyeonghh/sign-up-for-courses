@@ -27,7 +27,7 @@ public class MemberRepository {
     }
 
     public Member findById(int id) {
-        return members.stream().filter(m -> m.getId() == id).findAny().get();
+        return members.stream().filter(m -> m.getId() == id).findAny().orElse(null);
     }
 
     public List<Member> findByMajor(String major) {

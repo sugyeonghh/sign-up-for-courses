@@ -24,7 +24,7 @@ public class CourseRepository {
     }
 
     public Course findById(int courseId) {
-        return courses.stream().filter(c->c.getId() == courseId).findAny().get();
+        return courses.stream().filter(c->c.getId() == courseId).findAny().orElse(null);
     }
 
     public List<Course> findByName(String name) {
