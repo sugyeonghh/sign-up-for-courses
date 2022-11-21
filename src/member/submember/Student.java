@@ -14,4 +14,9 @@ public class Student extends Member {
         return year;
     }
 
+    @Override
+    public void printMyInfo(Member member) {
+        super.printMyInfo(member);
+        System.out.println("학년: " + ((Student) member).getYear() + "학년");
+    }
 }

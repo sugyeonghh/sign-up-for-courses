@@ -6,11 +6,10 @@ public class Course {
     private String prof;
     private int maximumPeople;
     private int time;
-    enum CourseDays { MON, TUE, WED, THU, FRI }
-    private final CourseDays day;
+    private String day;
     private int credit;
 
-    public Course(int id, String name, String prof, int maximumPeople, int time, CourseDays day, int credit) {
+    public Course(int id, String name, String prof, int maximumPeople, int time, String day, int credit) {
         this.id = id;
         this.name = name;
         this.prof = prof;
@@ -40,7 +39,7 @@ public class Course {
         return time;
     }
 
-    public CourseDays getDay() {
+    public String getDay() {
         return day;
     }
 

@@ -3,23 +3,37 @@ import member.Member;
 import member.submember.Professor;
 import member.submember.Student;
 import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
-public class PrintInfo {
+public class ResisterPage {
     private List<Course> courses;
     private List<Member> members;
 
-    public PrintInfo(List<Course> courses, List<Member> members) {
+    public ResisterPage(List<Course> courses, List<Member> members) {
         this.courses = courses;
         this.members = members;
     }
 
+    public void resist(Student student) {
+        Scanner sc = new Scanner(System.in);
+        printCourseList();
+        System.out.print("수강신청할 강의의 학수번호를 입력하세요: ");
+        int id = Integer.parseInt(sc.nextLine());
+        Course newCourse = courses.stream().filter(c->c.getId() == id).findAny().orElse(null);
+        if (newCourse != null) {
+            student.getCourseList().add(newCourse); // [?] get으로 가져온거에 바로 넣어도 되나??
+            System.out.println("<" + newCourse.getName() + "-" + newCourse.getProf() + "> 강의를 신청하였습니다.");
+        }
+        else System.out.println("해당 강의를 찾지 못했습니다. ");
+    }
+
     // 강의 리스트
     public void printCourseList() {
-        System.out.println("수강신청 강의 리스트");
-        System.out.println("=".repeat(80));
+        System.out.println("전체 강의 리스트");
+        System.out.println("*".repeat(80));
         printCourseListDetail(courses);
-        System.out.println("=".repeat(80));
+        System.out.println("*".repeat(80));
     }
 
     // 강의 리스트 - 강의명
@@ -41,7 +55,7 @@ public class PrintInfo {
     }
 
     // 강의 리스트 - 디테일
-    private void printCourseListDetail(List<Course> courses) {
+    public void printCourseListDetail(List<Course> courses) {
         if (courses.isEmpty()) {
             System.out.println("강의를 찾을 수 없습니다.");
             return;
@@ -56,7 +70,7 @@ public class PrintInfo {
                     course.getDay(),
                     course.getTime(),
                     course.getTime() + course.getCredit(),
-                    course.getMaximumPeople());
+                    course.getMaximumPeople()); // 수정필요
         }
     }
 

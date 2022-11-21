@@ -30,6 +30,10 @@ public class MemberRepository {
         return members.stream().filter(m -> m.getId() == id).findAny().orElse(null);
     }
 
+    public Member findByName(String name) {
+        return members.stream().filter(m -> m.getName() == name).findAny().orElse(null);
+    }
+
     public List<Member> findByMajor(String major) {
         return members.stream().filter(m -> m.getMajor().equals(major)).collect(Collectors.toList());
     }

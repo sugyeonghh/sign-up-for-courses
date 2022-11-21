@@ -2,11 +2,12 @@ public class Main {
     public static void main(String[] args) {
         AppConfigurer appConfigure = new AppConfigurer();
 
-        ResisterApp resisterApp = new ResisterApp(
+        SignUpApp signUpApp = new SignUpApp(
                 appConfigure.courseRepository,
-                appConfigure.menu
+                appConfigure.menu,
+                appConfigure.features
         );
 
-        resisterApp.start();
+        signUpApp.start();
     }
 }

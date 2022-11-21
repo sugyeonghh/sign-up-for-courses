@@ -13,4 +13,10 @@ public class Professor extends Member {
     public String getLab() {
         return lab;
     }
+
+    @Override
+    public void printMyInfo(Member member) {
+        super.printMyInfo(member);
+        System.out.println("연구실: " + ((Professor) member).getLab());
+    }
 }
