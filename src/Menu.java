@@ -1,4 +1,3 @@
-import course.Course;
 import member.Member;
 import member.submember.Professor;
 import member.submember.Student;
@@ -8,18 +7,20 @@ import java.util.Scanner;
 
 public class Menu {
     Scanner sc = new Scanner(System.in);
-    private List<Member> members;
+    private final List<Member> members;
 
-    public Menu(List<Course> courses, List<Member> members) {
+    public Menu(List<Member> members) {
         this.members = members;
     }
 
-    public void printMenu(Member member) {
+    public void printMenu(Member member, boolean greeting) {
         if (member instanceof Professor) {
-            printProfMenu((Professor)member);
+            if (greeting) System.out.printf("%s 교수님, 안녕하세요!\n", member.getName());
+            printProfMenu();
         }
         else if (member instanceof Student) {
-            printStudentMenu((Student)member);
+            if (greeting) System.out.printf("%s 학우님, 안녕하세요!\n", member.getName());
+            printStudentMenu();
         }
     }
 
@@ -62,7 +63,7 @@ public class Menu {
         System.out.println("회원가입");
         System.out.println("-".repeat(80));
         System.out.println("[1] 교수 [2] 학생");
-        boolean isProf = sc.nextLine().equals("1") ? true : false;
+        boolean isProf = sc.nextLine().equals("1");
 
         System.out.print("아이디를 입력하세요: ");
         int id = Integer.parseInt(sc.nextLine());
@@ -93,8 +94,7 @@ public class Menu {
         System.out.println("다시 로그인 해주세요.");
     }
 
-    private void printProfMenu(Professor prof) {
-        System.out.printf("%s 교수님, 안녕하세요!\n", prof.getName());
+    private void printProfMenu() {
         System.out.println("[1] 나의 정보 조회");
         System.out.println("[2] 강의 등록");
         System.out.println("[3] 강의 목록 조회");
@@ -104,8 +104,7 @@ public class Menu {
         System.out.println("[/] 프로그램 종료");
     }
 
-    private void printStudentMenu(Student student) {
-        System.out.printf("%s 학우님, 안녕하세요!\n", student.getName());
+    private void printStudentMenu() {
         System.out.println("[1] 나의 정보 조회");
         System.out.println("[2] 수강신청");
         System.out.println("[3] 시간표 조회");
