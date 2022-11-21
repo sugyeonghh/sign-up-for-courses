@@ -1,7 +1,5 @@
-import course.PrintCourseList;
+import course.Course;
 import member.Member;
-import member.MemberRepository;
-import member.PrintMemberList;
 import member.submember.Professor;
 import member.submember.Student;
 
@@ -10,40 +8,22 @@ import java.util.Scanner;
 
 public class Menu {
     Scanner sc = new Scanner(System.in);
-    List<Member> members;
+    private List<Member> members;
 
-    public Menu(List<Member> members) {
+    public Menu(List<Course> courses, List<Member> members) {
         this.members = members;
     }
 
-    public void printMenu() {
-        // 로그인
-        System.out.println("로그인이 필요합니다.");
-        System.out.println("=".repeat(80));
-        Member mem = login();
-        System.out.println("=".repeat(80));
-
-
-        // 교수 페이지
-        if (mem instanceof Professor) {
-            System.out.printf("%s 교수님, 안녕하세요!\n", mem.getName());
-            System.out.println("[1] 나의 정보 조회");
-            System.out.println("[2] 강의 등록");
-            System.out.println("[3] 강의 목록 조회");
-            System.out.println("[4] 강의별 수강생 조회");
-            System.out.println("[5] 수강생 조회");
+    public void printMenu(Member member) {
+        if (member instanceof Professor) {
+            printProfMenu((Professor)member);
         }
-        // 학생 페이지
-        else if (mem instanceof Student) {
-            System.out.printf("%s님, 안녕하세요!\n", mem.getName());
-            System.out.println("[1] 나의 정보 조회");
-            System.out.println("[2] 수강신청");
-            System.out.println("[3] 시간표 조회");
-            System.out.println("[4] 교수 조회");
+        else if (member instanceof Student) {
+            printStudentMenu((Student)member);
         }
     }
 
-    private Member login() {
+    public Member login() {
         System.out.println("로그인");
         System.out.println("-".repeat(80));
 
@@ -110,5 +90,28 @@ public class Menu {
         }
         members.add(member);
         System.out.printf("%s님 %s계정으로 회원가입 되었습니다.\n", name, isProf ? "교수" : "학생");
+        System.out.println("다시 로그인 해주세요.");
+    }
+
+    private void printProfMenu(Professor prof) {
+        System.out.printf("%s 교수님, 안녕하세요!\n", prof.getName());
+        System.out.println("[1] 나의 정보 조회");
+        System.out.println("[2] 강의 등록");
+        System.out.println("[3] 강의 목록 조회");
+        System.out.println("[4] 강의별 수강생 조회");
+        System.out.println("[5] 수강생 정보 조회");
+        System.out.println("[-] 로그아웃");
+        System.out.println("[/] 프로그램 종료");
+    }
+
+    private void printStudentMenu(Student student) {
+        System.out.printf("%s 학우님, 안녕하세요!\n", student.getName());
+        System.out.println("[1] 나의 정보 조회");
+        System.out.println("[2] 수강신청");
+        System.out.println("[3] 시간표 조회");
+        System.out.println("[4] 교수별 강의 조회");
+        System.out.println("[5] 교수 정보 조회");
+        System.out.println("[-] 로그아웃");
+        System.out.println("[/] 프로그램 종료");
     }
 }
