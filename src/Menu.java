@@ -22,6 +22,10 @@ public class Menu {
             if (greeting) System.out.printf("%s 학우님, 안녕하세요!\n", member.getName());
             printStudentMenu();
         }
+        else if (member.getClass() == Member.class) {
+            if (greeting) System.out.printf("%s 계정입니다. \n", member.getName());
+            printMemberMenu();
+        }
     }
 
     public Member login() {
@@ -110,6 +114,13 @@ public class Menu {
         System.out.println("[3] 신청 과목 조회");
         System.out.println("[4] 담당교수별 강의 조회"); // 애매하다
         System.out.println("[5] 교수 정보 조회");
+        System.out.println("[-] 로그아웃");
+        System.out.println("[/] 프로그램 종료");
+    }
+
+    private void printMemberMenu() {
+        System.out.println("[1] 회원 리스트 조회");
+        System.out.println("[2] 강의 리스트 조회");
         System.out.println("[-] 로그아웃");
         System.out.println("[/] 프로그램 종료");
     }

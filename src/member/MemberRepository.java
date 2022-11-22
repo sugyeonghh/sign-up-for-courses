@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 public class MemberRepository {
     List<Member> members = new ArrayList<>(Arrays.asList(
+            new Member(1, 1, "관리자", null),
             new Professor(202201, 202201, "김요한", "컴퓨터공학", "코드스테이츠 1관"),
             new Professor(202202, 202202, "조영현", "컴퓨터과학", "코드스테이츠 2관"),
             new Professor(202203, 202203, "구민상", "소프트웨어공학", "코드스테이츠 3관"),

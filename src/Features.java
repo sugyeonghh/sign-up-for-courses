@@ -22,7 +22,8 @@ public class Features {
     public void selectFeatures(Member member, int num) {
         System.out.println("=".repeat(80));
         if (member instanceof Professor) selectProfFeatuers((Professor) member, num);
-        else selectStudentFeatures((Student) member, num);
+        else if (member instanceof Student){ selectStudentFeatures((Student) member, num);}
+        else selectMemberFeatures(member, num);
         System.out.println("=".repeat(80));
     }
 
@@ -87,6 +88,21 @@ public class Features {
                 System.out.println("-".repeat(80));
                 System.out.print("조회할 학생의 이름을 입력하세요: ");
                 searchMemberInfo(prof);
+                break;
+        }
+    }
+
+    private void selectMemberFeatures(Member member, int num) {
+        switch (num) {
+            case 1:
+                System.out.println("회원 리스트를 조회합니다.");
+                System.out.println("-".repeat(80));
+                resisterPage.printMemberList();
+                break;
+            case 2:
+                System.out.println("강의 리스트를 조회합니다.");
+                System.out.println("-".repeat(80));
+                resisterPage.printCourseList();
                 break;
         }
     }
