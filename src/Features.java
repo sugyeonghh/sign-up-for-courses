@@ -23,7 +23,7 @@ public class Features {
         System.out.println("=".repeat(80));
         if (member instanceof Professor) selectProfFeatuers((Professor) member, num);
         else if (member instanceof Student){ selectStudentFeatures((Student) member, num);}
-        else selectMemberFeatures(member, num);
+        else selectMemberFeatures(num);
         System.out.println("=".repeat(80));
     }
 
@@ -40,16 +40,16 @@ public class Features {
                 resisterPage.resist(student);
                 break;
             case 3:
+                System.out.println("강의를 조회합니다");
+                System.out.println("-".repeat(80));
+                printSearchCoursesMenu();
+                int selectMenu = Integer.parseInt(sc.nextLine());
+                selectSearchCoursesMenu(selectMenu);
+                break;
+            case 4:
                 System.out.println("신청한 과목을 조회합니다.");
                 System.out.println("-".repeat(80));
                 resisterPage.printCourseListDetail(student.getCourseList());
-                break;
-            case 4:
-                System.out.println("담당교수별 강의를 조회합니다");
-                System.out.println("-".repeat(80));
-                System.out.print("교수의 이름을 입력하세요: ");
-                String name = sc.nextLine();
-                resisterPage.printCoursesByProf(name);
                 break;
             case 5:
                 System.out.println("교수 정보를 조회합니다.");
@@ -58,6 +58,36 @@ public class Features {
                 searchMemberInfo(student);
                 break;
         }
+    }
+
+    private void selectSearchCoursesMenu(int selectMenu) {
+        switch (selectMenu) {
+            case 1:
+                System.out.print("교수명을 입력하세요: ");
+                String profName = sc.nextLine();
+                System.out.println("=".repeat(80));
+                resisterPage.printCoursesByProf(profName);
+                break;
+            case 2:
+                // 수정 필요
+                System.out.print("강의명을 입력하세요: ");
+                String courseName = sc.next();
+                System.out.println("=".repeat(80));
+                resisterPage.printCoursesByName(courseName);
+                break;
+            case 3:
+                System.out.print("학점을 입력하세요: ");
+                int credit = Integer.parseInt(sc.nextLine());
+                System.out.println("=".repeat(80));
+                resisterPage.printCoursesByCredit(credit);
+                break;
+        }
+    }
+
+    private void printSearchCoursesMenu() {
+        System.out.println("[1] 교수별 강의 조회");
+        System.out.println("[2] 강의명별 강의 조회");
+        System.out.println("[3] 학점별 강의 조회");
     }
 
     private void selectProfFeatuers(Professor prof, int num) {
@@ -76,7 +106,7 @@ public class Features {
             case 3:
                 System.out.println("강의 목록을 조회합니다.");
                 System.out.println("-".repeat(80));
-                resisterPage.printCourseListDetail(prof.getCourseList());
+                resisterPage.printCoursesByProf(prof.getName());
                 break;
             case 4:
                 System.out.println("강의별 수강생을 조회합니다.");
@@ -92,7 +122,7 @@ public class Features {
         }
     }
 
-    private void selectMemberFeatures(Member member, int num) {
+    private void selectMemberFeatures(int num) {
         switch (num) {
             case 1:
                 System.out.println("회원 리스트를 조회합니다.");

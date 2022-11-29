@@ -111,8 +111,8 @@ public class Menu {
     private void printStudentMenu() {
         System.out.println("[1] 내 정보 조회");
         System.out.println("[2] 수강신청");
-        System.out.println("[3] 신청 과목 조회");
-        System.out.println("[4] 담당교수별 강의 조회"); // 애매하다
+        System.out.println("[3] 강의 조회");
+        System.out.println("[4] 신청 과목 조회");
         System.out.println("[5] 교수 정보 조회");
         System.out.println("[-] 로그아웃");
         System.out.println("[/] 프로그램 종료");

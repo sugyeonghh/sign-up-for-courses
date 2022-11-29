@@ -12,7 +12,7 @@ public class CourseRepository {
             new Course(1002, "객체지향 프로그래밍", "구민상", 5, 13, "MON", 3),
             new Course(2001, "리눅스 프로그래밍", "조영현", 5, 11, "TUE", 2),
             new Course(2002, "리눅스 프로그래밍", "구민상", 5, 11, "WED", 2),
-            new Course(3001, "HTML", "황선애", 3, 14, "THU", 3),
+            new Course(3001, "HTML", "황선애", 3, 10, "MON", 3),
             new Course(4001, "CSS", "황선애", 3, 14, "FRI", 3),
             new Course(5001, "알고리즘", "이정민", 5, 9, "THU", 3),
             new Course(6001, "자료구조", "이정민", 5, 15, "THU", 3),

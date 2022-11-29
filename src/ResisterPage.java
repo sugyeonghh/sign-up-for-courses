@@ -5,6 +5,7 @@ import member.submember.Student;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class ResisterPage {
     private List<Course> courses;
@@ -19,13 +20,34 @@ public class ResisterPage {
         Scanner sc = new Scanner(System.in);
         printCourseList();
         System.out.print("수강신청할 강의의 학수번호를 입력하세요: ");
-        int id = Integer.parseInt(sc.nextLine());
-        Course newCourse = courses.stream().filter(c->c.getId() == id).findAny().orElse(null);
-        if (newCourse != null) {
-            student.getCourseList().add(newCourse); // [?] get으로 가져온거에 바로 넣어도 되나??
+        int courseId = Integer.parseInt(sc.nextLine());
+        Course newCourse = courses.stream().filter(c -> c.getId() == courseId).findAny().orElse(null);
+        if (isValidCourse(newCourse, student.getCourseList())) {
+            student.getCourseList().add(newCourse);
             System.out.println("<" + newCourse.getName() + "-" + newCourse.getProf() + "> 강의를 신청하였습니다.");
         }
-        else System.out.println("해당 강의를 찾지 못했습니다. ");
+    }
+
+    private boolean isValidCourse(Course newCourse, List<Course> courseList) {
+        if (newCourse == null) {
+            System.out.println("해당 강의를 찾지 못했습니다. ");
+            return false;
+        }
+        for (Course course : courseList) {
+            if (course.getDay().equals(newCourse.getDay())) {
+                if (course.getTime() < newCourse.getTime()) {
+                    if (course.getTime() + course.getCredit() < newCourse.getTime()) return true;
+                }
+                else if (course.getTime() > newCourse.getTime()) {
+                    if (course.getTime() > newCourse.getTime() + newCourse.getCredit()) return true;
+                }
+                else {
+                    System.out.println("시간표가 겹칩니다!");
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     // 강의 리스트
@@ -60,16 +82,17 @@ public class ResisterPage {
             System.out.println("강의를 찾을 수 없습니다.");
             return;
         }
-        System.out.printf("%-8s %-20s %-10s %-8s %15s\n", "학수번호", "강의명", "담당교수", "강의시간", "담은 인원");
+        System.out.printf("%-8s %-20s %-10s %-8s %10s %10s\n", "학수번호", "강의명", "담당교수", "강의시간", "학점", "담은 인원");
         System.out.println("-".repeat(80));
         for (Course course : courses) {
-            System.out.printf("%-10d %-17s %-10s [%s]%3d시~%3d시 %9d\n",
+            System.out.printf("%-10d %-17s %-10s [%s]%d시 ~ %d시 %5d학점 %5d\n",
                     course.getId(),
                     course.getName(),
                     course.getProf(),
                     course.getDay(),
                     course.getTime(),
                     course.getTime() + course.getCredit(),
+                    course.getCredit(),
                     course.getMaximumPeople()); // 수정필요
         }
     }
