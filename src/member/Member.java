@@ -43,8 +43,8 @@ public class Member {
         return courseList;
     }
 
-    public void setCourseList(List<Course> courseList) {
-        this.courseList = courseList;
+    public void setCourseList(Course newCourse) {
+        getCourseList().add(newCourse);
     }
 
     // 내 정보 조회 -> 여기에 써도 되나??

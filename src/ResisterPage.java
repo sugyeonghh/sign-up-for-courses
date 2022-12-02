@@ -1,36 +1,53 @@
 import course.Course;
+import course.CourseRepository;
 import member.Member;
 import member.submember.Professor;
 import member.submember.Student;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class ResisterPage {
-    private List<Course> courses;
+    private CourseRepository courseRepository;
     private List<Member> members;
+    private List<Course> courses;
 
-    public ResisterPage(List<Course> courses, List<Member> members) {
-        this.courses = courses;
+    public ResisterPage(CourseRepository courseRepository, List<Member> members) {
+        this.courseRepository = courseRepository;
         this.members = members;
+        this.courses = courseRepository.getCourses();
     }
 
-    public void resist(Student student) {
+    public void resister(Student student) {
         Scanner sc = new Scanner(System.in);
         printCourseList();
         System.out.print("수강신청할 강의의 학수번호를 입력하세요: ");
         int courseId = Integer.parseInt(sc.nextLine());
-        Course newCourse = courses.stream().filter(c -> c.getId() == courseId).findAny().orElse(null);
-        if (isValidCourse(newCourse, student.getCourseList())) {
-            student.getCourseList().add(newCourse);
+        Course newCourse = courseRepository.findById(courseId);
+        if (isValidCourse(newCourse, student.getCourseList(), student)) {
+            student.setCourseList(newCourse);
+            student.setCredit(newCourse.getCredit());
             System.out.println("<" + newCourse.getName() + "-" + newCourse.getProf() + "> 강의를 신청하였습니다.");
+            courseRepository.findById(courseId).setNumOfPeople(1);
         }
     }
 
-    private boolean isValidCourse(Course newCourse, List<Course> courseList) {
+    private boolean isValidCourse(Course newCourse, List<Course> courseList, Student student) {
+        List<Course> studentCourseList = student.getCourseList();
         if (newCourse == null) {
             System.out.println("해당 강의를 찾지 못했습니다. ");
+            return false;
+        }
+        else if (newCourse.isFull()) {
+            System.out.println("최대 인원을 초과하였습니다.");
+            return false;
+        }
+        else if (studentCourseList.contains(newCourse)){
+            System.out.println("이미 신청하였습니다.");
+            return false;
+        }
+        else if (student.getCredit() + newCourse.getCredit() > student.getMaxCredit()) {
+            System.out.println("신청 가능한 학점을 초과하였습니다. ");
             return false;
         }
         for (Course course : courseList) {
@@ -54,30 +71,12 @@ public class ResisterPage {
     public void printCourseList() {
         System.out.println("전체 강의 리스트");
         System.out.println("*".repeat(80));
-        printCourseListDetail(courses);
+        printCourseListDetail(courses, false);
         System.out.println("*".repeat(80));
     }
 
-    // 강의 리스트 - 강의명
-    public void printCoursesByName(String courseName) {
-        List<Course> courses1 = courses.stream().filter(c->c.getName().equals(courseName)).collect(Collectors.toList());
-        printCourseListDetail(courses1);
-    }
-
-    // 강의 리스트 - 교수
-    public void printCoursesByProf(String prof) {
-        List<Course> courses1 = courses.stream().filter(c->c.getProf().equals(prof)).collect(Collectors.toList());
-        printCourseListDetail(courses1);
-    }
-
-    // 강의 리스트 - 학점
-    public void printCoursesByCredit(int credit) {
-        List<Course> courses1 = courses.stream().filter(c->c.getCredit() == credit).collect(Collectors.toList());
-        printCourseListDetail(courses1);
-    }
-
     // 강의 리스트 - 디테일
-    public void printCourseListDetail(List<Course> courses) {
+    public void printCourseListDetail(List<Course> courses, boolean isCredit) {
         if (courses.isEmpty()) {
             System.out.println("강의를 찾을 수 없습니다.");
             return;
@@ -85,16 +84,26 @@ public class ResisterPage {
         System.out.printf("%-8s %-20s %-10s %-8s %10s %10s\n", "학수번호", "강의명", "담당교수", "강의시간", "학점", "담은 인원");
         System.out.println("-".repeat(80));
         for (Course course : courses) {
-            System.out.printf("%-10d %-17s %-10s [%s]%d시 ~ %d시 %5d학점 %5d\n",
-                    course.getId(),
-                    course.getName(),
-                    course.getProf(),
-                    course.getDay(),
-                    course.getTime(),
-                    course.getTime() + course.getCredit(),
-                    course.getCredit(),
-                    course.getMaximumPeople()); // 수정필요
+            printEachCourse(course);
         }
+        System.out.println("-".repeat(80));
+        System.out.println("총 " + courses.size() + "개 강의");
+        if (isCredit) {
+            int credit = courses.stream().mapToInt(c -> c.getCredit()).sum();
+            System.out.println("현재 신청한 학점: " + credit + "학점");
+        }
+    }
+
+    public void printEachCourse(Course course) {
+        System.out.printf("%-10d %-17s %-10s [%s]%d시 ~ %d시 %5d학점 %5d명\n",
+                course.getId(),
+                course.getName(),
+                course.getProf(),
+                course.getDay(),
+                course.getTime(),
+                course.getTime() + course.getCredit(),
+                course.getCredit(),
+                course.getNumOfPeople());
     }
 
     // 회원 리스트

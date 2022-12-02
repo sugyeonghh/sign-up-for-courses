@@ -91,7 +91,7 @@ public class Menu {
         else {
             System.out.print("학년을 입력하세요: ");
             int year = Integer.parseInt(sc.nextLine());
-            member = new Student(id, pw, name, major, year);
+            member = new Student(id, pw, name, major, year, 21);
         }
         members.add(member);
         System.out.printf("%s님 %s계정으로 회원가입 되었습니다.\n", name, isProf ? "교수" : "학생");
@@ -116,6 +116,12 @@ public class Menu {
         System.out.println("[5] 교수 정보 조회");
         System.out.println("[-] 로그아웃");
         System.out.println("[/] 프로그램 종료");
+    }
+
+    public void printSearchCoursesMenu() {
+        System.out.println("[1] 교수별 강의 조회");
+        System.out.println("[2] 강의명별 강의 조회");
+        System.out.println("[3] 학점별 강의 조회");
     }
 
     private void printMemberMenu() {

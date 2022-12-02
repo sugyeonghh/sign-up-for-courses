@@ -1,4 +1,5 @@
 import course.Course;
+import course.CourseRepository;
 import member.Member;
 import member.submember.Professor;
 import member.submember.Student;
@@ -8,15 +9,17 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class Features {
-    List<Course> courses;
     List<Member> members;
+    CourseRepository courseRepository;
     ResisterPage resisterPage;
+    List<Course> courses;
     Scanner sc = new Scanner(System.in);
 
-    public Features(List<Course> courses, List<Member> members, ResisterPage resisterPage) {
-        this.courses = courses;
+    public Features(List<Member> members, CourseRepository courseRepository, ResisterPage resisterPage) {
         this.members = members;
+        this.courseRepository = courseRepository;
         this.resisterPage = resisterPage;
+        this.courses = courseRepository.getCourses();
     }
 
     public void selectFeatures(Member member, int num) {
@@ -37,21 +40,23 @@ public class Features {
             case 2:
                 System.out.println("수강신청");
                 System.out.println("-".repeat(80));
-                resisterPage.resist(student);
+                resisterPage.resister(student);
                 break;
             case 3:
                 System.out.println("강의를 조회합니다");
                 System.out.println("-".repeat(80));
-                printSearchCoursesMenu();
+                Menu menu = new Menu(members);
+                menu.printSearchCoursesMenu();
                 int selectMenu = Integer.parseInt(sc.nextLine());
                 selectSearchCoursesMenu(selectMenu);
                 break;
             case 4:
                 System.out.println("신청한 과목을 조회합니다.");
                 System.out.println("-".repeat(80));
-                resisterPage.printCourseListDetail(student.getCourseList());
+                resisterPage.printCourseListDetail(student.getCourseList(), true);
                 break;
             case 5:
+                // 수정 필요
                 System.out.println("교수 정보를 조회합니다.");
                 System.out.println("-".repeat(80));
                 System.out.print("조회할 교수의 이름을 입력하세요: ");
@@ -66,28 +71,21 @@ public class Features {
                 System.out.print("교수명을 입력하세요: ");
                 String profName = sc.nextLine();
                 System.out.println("=".repeat(80));
-                resisterPage.printCoursesByProf(profName);
+                resisterPage.printCourseListDetail(courseRepository.findByProfessor(profName), false);
                 break;
             case 2:
-                // 수정 필요
                 System.out.print("강의명을 입력하세요: ");
-                String courseName = sc.next();
+                String courseName = sc.nextLine();
                 System.out.println("=".repeat(80));
-                resisterPage.printCoursesByName(courseName);
+                resisterPage.printCourseListDetail(courseRepository.findByName(courseName), false);
                 break;
             case 3:
                 System.out.print("학점을 입력하세요: ");
                 int credit = Integer.parseInt(sc.nextLine());
                 System.out.println("=".repeat(80));
-                resisterPage.printCoursesByCredit(credit);
+                resisterPage.printCourseListDetail(courseRepository.findByCredit(credit), false);
                 break;
         }
-    }
-
-    private void printSearchCoursesMenu() {
-        System.out.println("[1] 교수별 강의 조회");
-        System.out.println("[2] 강의명별 강의 조회");
-        System.out.println("[3] 학점별 강의 조회");
     }
 
     private void selectProfFeatuers(Professor prof, int num) {
@@ -100,13 +98,17 @@ public class Features {
             case 2:
                 System.out.println("강의를 등록합니다.");
                 System.out.println("-".repeat(80));
-                createCourse(prof);
+                Course newCourse = createCourse(prof);
+                courses.add(newCourse);
+                System.out.println("-".repeat(80));
+                resisterPage.printEachCourse(newCourse);
+                System.out.println("-".repeat(80));
                 System.out.println("강의를 등록하였습니다.");
                 break;
             case 3:
                 System.out.println("강의 목록을 조회합니다.");
                 System.out.println("-".repeat(80));
-                resisterPage.printCoursesByProf(prof.getName());
+                resisterPage.printCourseListDetail(courseRepository.findByProfessor(prof.getName()), false);
                 break;
             case 4:
                 System.out.println("강의별 수강생을 조회합니다.");
@@ -153,7 +155,7 @@ public class Features {
         }
     }
 
-    private void createCourse(Professor prof) {
+    private Course createCourse(Professor prof) {
         System.out.print("학수번호를 입력하세요: ");
         int id = Integer.parseInt(sc.nextLine());
         System.out.print("강의명을 입력하세요: ");
@@ -163,11 +165,9 @@ public class Features {
         System.out.print("강의 시작 시간을 입력하세요: ");
         int time = Integer.parseInt(sc.nextLine());
         System.out.print("강의 요일을 입력하세요: ");
-        String day = sc.nextLine();
+        String day = sc.nextLine().toUpperCase();
         System.out.print("학점을 입력하세요: ");
         int credit = Integer.parseInt(sc.nextLine());
-        Course newCourse = new Course(id, name, prof.getName(), maximum, time, day, credit);
-        prof.getCourseList().add(newCourse);
-        courses.add(newCourse);
+        return new Course(id, name, prof.getName(), maximum, 0, time, day, credit);
     }
 }
